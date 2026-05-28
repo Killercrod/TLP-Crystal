@@ -1,6 +1,5 @@
-require "spec"
-require "./src/contacto"
-require "./src/contacto_bst"
+require "../src/contacto"
+require "../src/contacto_bst"
 
 describe ContactoBST do
   describe "#insertar" do
