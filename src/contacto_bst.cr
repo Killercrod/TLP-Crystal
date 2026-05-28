@@ -50,6 +50,39 @@ class ContactoBST
     nodo
   end
 
+  # Buscar contactos por mes de cumpleaños
+# Retorna un arreglo con las coincidencias
+# Ordenado por día de cumpleaños
+def buscar_por_mes(mes : Int32) : Array(Contacto)
+  resultados = Array(Contacto).new
+
+  buscar_por_mes_rec(@raiz, mes, resultados)
+
+  # Ordenar por día
+  resultados.sort_by(&.dia)
+end
+
+# Recorrer el árbol completo buscando coincidencias
+private def buscar_por_mes_rec(
+  nodo : NodoContacto?,
+  mes : Int32,
+  resultados : Array(Contacto)
+) : Void
+
+  return if nodo.nil?
+
+  # Recorrer izquierda
+  buscar_por_mes_rec(nodo.izquierdo, mes, resultados)
+
+  # Verificar coincidencia
+  if nodo.contacto.mes == mes
+    resultados << nodo.contacto
+  end
+
+  # Recorrer derecha
+  buscar_por_mes_rec(nodo.derecho, mes, resultados)
+end
+
   # Buscar por nombre (string).
   # Retorna el objeto Contacto si se encuentra, o nil si no existe.
   # Comentario: la búsqueda es recursiva y solo recorre la rama necesaria
