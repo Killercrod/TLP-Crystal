@@ -91,3 +91,5 @@ class ContactoBST
     listar_rec(nodo.derecho, resultado)
   end
 end
+
+alias ArbolBST = ContactoBST
