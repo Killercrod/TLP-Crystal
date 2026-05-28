@@ -1,0 +1,39 @@
+# .gitignore - Archivos a ignorar en Git
+
+# Ejecutables compilados
+contacts
+contacts.exe
+*.o
+*.a
+*.so
+*.dylib
+
+# Directorios de compilación
+build/
+bin/
+dist/
+
+# IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Crystal específico
+lib/
+.shards/
+*.dwarf
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.bak
+*.log
+
+# Base de datos local (para desarrollo)
+contactos.csv
+test_*.json
