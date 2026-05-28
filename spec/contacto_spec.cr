@@ -23,13 +23,30 @@ describe Contacto do
       end
     end
 
-    it "lanza error si el mes es inválido" do
+    it "lanza error si el día es inválido para el mes" do
       expect_raises(ArgumentError) do
-        Contacto.new("Juan", "juan@example.com", "+34 123", 15, 0)
+        # Febrero no puede tener 30 días
+        Contacto.new("Juan", "juan@example.com", "+34 123", 30, 2)
       end
       
       expect_raises(ArgumentError) do
-        Contacto.new("Juan", "juan@example.com", "+34 123", 15, 13)
+        # Abril solo tiene 30 días
+        Contacto.new("Juan", "juan@example.com", "+34 123", 31, 4)
+      end
+
+      expect_raises(ArgumentError) do
+        # Junio solo tiene 30 días
+        Contacto.new("Juan", "juan@example.com", "+34 123", 31, 6)
+      end
+
+      expect_raises(ArgumentError) do
+        # Septiembre solo tiene 30 días
+        Contacto.new("Juan", "juan@example.com", "+34 123", 31, 9)
+      end
+
+      expect_raises(ArgumentError) do
+        # Noviembre solo tiene 30 días
+        Contacto.new("Juan", "juan@example.com", "+34 123", 31, 11)
       end
     end
   end
@@ -59,19 +76,40 @@ describe Contacto do
       contacto.mes.should eq(12)
     end
 
-    it "valida el nuevo día" do
-      contacto = Contacto.new("Laura", "laura@example.com", "+34 333", 15, 6)
-      
+    it "valida el nuevo día según el mes" do
+      # Contacto con día 30 en mes de 31 días
+      contacto = Contacto.new("Laura", "laura@example.com", "+34 333", 30, 1)
+      contacto.dia = 31  # Enero tiene 31 días
+      contacto.dia.should eq(31)
+
       expect_raises(ArgumentError) do
-        contacto.dia = 32
+        # No puede cambiar a día 31 en febrero
+        contacto_feb = Contacto.new("Laura", "laura@example.com", "+34 333", 15, 2)
+        contacto_feb.dia = 31
+      end
+
+      expect_raises(ArgumentError) do
+        # No puede cambiar a día 31 en abril (solo 30)
+        contacto_abr = Contacto.new("Laura", "laura@example.com", "+34 333", 15, 4)
+        contacto_abr.dia = 31
       end
     end
 
-    it "valida el nuevo mes" do
-      contacto = Contacto.new("Rosa", "rosa@example.com", "+34 444", 15, 6)
+    it "valida que el mes nuevo sea compatible con el día actual" do
+      # Contacto con día 31 en mes de 31 días
+      contacto = Contacto.new("Carlos", "carlos@example.com", "+34 222", 31, 1)
       
+      # Puede cambiar a otro mes con 31 días
+      contacto.mes = 12
+      contacto.mes.should eq(12)
+
+      # Pero no puede cambiar a un mes con menos días
       expect_raises(ArgumentError) do
-        contacto.mes = 13
+        contacto.mes = 4  # Abril solo tiene 30 días
+      end
+
+      expect_raises(ArgumentError) do
+        contacto.mes = 2  # Febrero solo tiene 29 días
       end
     end
   end
@@ -182,6 +220,39 @@ describe Contacto do
       contacto.dia = 28
       contacto.mes = 12
       contacto.valido?.should be_true
+    end
+
+    it "valida correctamente días para meses de 31 días" do
+      # Enero (31 días)
+      contacto_ene = Contacto.new("Test", "test@example.com", "+34 123", 31, 1)
+      contacto_ene.valido?.should be_true
+
+      # Febrero - día 31 no es válido
+      expect_raises(ArgumentError) do
+        Contacto.new("Test", "test@example.com", "+34 123", 31, 2)
+      end
+    end
+
+    it "valida correctamente días para meses de 30 días" do
+      # Abril (30 días)
+      contacto_abr = Contacto.new("Test", "test@example.com", "+34 123", 30, 4)
+      contacto_abr.valido?.should be_true
+
+      # Abril - día 31 no es válido
+      expect_raises(ArgumentError) do
+        Contacto.new("Test", "test@example.com", "+34 123", 31, 4)
+      end
+    end
+
+    it "valida correctamente días para febrero" do
+      # Febrero (máximo 29 días)
+      contacto_feb = Contacto.new("Test", "test@example.com", "+34 123", 29, 2)
+      contacto_feb.valido?.should be_true
+
+      # Febrero - día 30 no es válido
+      expect_raises(ArgumentError) do
+        Contacto.new("Test", "test@example.com", "+34 123", 30, 2)
+      end
     end
   end
 
