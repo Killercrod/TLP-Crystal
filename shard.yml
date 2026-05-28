@@ -1,0 +1,20 @@
+name: tlp-crystal-contactos
+version: 0.1.0
+description: |
+  Sistema de gestión de contactos con Árbol BST, persistencia CSV y búsquedas avanzadas
+  Implementado en Crystal
+
+authors:
+  - Author <author@example.com>
+
+targets:
+  tlp-crystal-contactos:
+    main: src/main.cr
+
+dependencies:
+  # Usa biblioteca estándar de Crystal
+  # No hay dependencias externas en esta etapa
+
+crystal: ">= 1.0.0"
+
+license: MIT
