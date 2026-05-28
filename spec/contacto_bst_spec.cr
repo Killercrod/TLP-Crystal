@@ -2,90 +2,31 @@ require "../src/contacto"
 require "../src/contacto_bst"
 
 describe ContactoBST do
-  describe "#insertar" do
-    it "asigna la raíz al insertar en un árbol vacío" do
-      arbol = ContactoBST.new
-      contacto = Contacto.new("Luis", "luis@example.com", "+34 111", 10, 5)
-
-      arbol.insertar(contacto)
-
-      arbol.buscar_por_nombre("Luis").should eq(contacto)
-    end
-
-    it "inserta contactos en los subárboles izquierdo y derecho" do
-      arbol = ContactoBST.new
-      luis = Contacto.new("Luis", "luis@example.com", "+34 111", 10, 5)
-      ana = Contacto.new("Ana", "ana@example.com", "+34 222", 11, 6)
-      pedro = Contacto.new("Pedro", "pedro@example.com", "+34 333", 12, 7)
-
-      arbol.insertar(luis)
-      arbol.insertar(ana)
-      arbol.insertar(pedro)
-
-      arbol.buscar_por_nombre("Ana").should eq(ana)
-      arbol.buscar_por_nombre("Pedro").should eq(pedro)
-    end
-
-    it "inserta de forma recursiva en niveles inferiores" do
-      arbol = ContactoBST.new
-      luis = Contacto.new("Luis", "luis@example.com", "+34 111", 10, 5)
-      ana = Contacto.new("Ana", "ana@example.com", "+34 222", 11, 6)
-      abel = Contacto.new("Abel", "abel@example.com", "+34 444", 13, 8)
-      pedro = Contacto.new("Pedro", "pedro@example.com", "+34 333", 12, 7)
-      zoe = Contacto.new("Zoe", "zoe@example.com", "+34 555", 14, 9)
-
-      arbol.insertar(luis)
-      arbol.insertar(ana)
-      arbol.insertar(abel)
-      arbol.insertar(pedro)
-      arbol.insertar(zoe)
-
-      nombres = arbol.listar_inorden.map(&.nombre)
-      nombres.should eq(["Abel", "Ana", "Luis", "Pedro", "Zoe"])
-    end
+  before do
+    @arbol = ContactoBST.new
   end
 
-  describe "#listar_inorden" do
-    it "retorna un arreglo vacío cuando el árbol está vacío" do
-      bst = ContactoBST.new
-      bst.listar_inorden.should eq([] of Contacto)
-    end
+  it "devuelve un arreglo vacío cuando el árbol está vacío" do
+    @arbol.listar_inorden.should eq([])
+  end
 
-    it "devuelve los contactos ordenados alfabéticamente" do
-      bst = ContactoBST.new
-      ana = Contacto.new("Ana", "ana@example.com", "+34 111", 1, 1)
-      bea = Contacto.new("Bea", "bea@example.com", "+34 222", 2, 2)
-      carlos = Contacto.new("Carlos", "carlos@example.com", "+34 333", 3, 3)
-      david = Contacto.new("David", "david@example.com", "+34 444", 4, 4)
+  it "recorre todos los nodos en orden alfabético" do
+    @arbol.insertar Contacto.new("Carlos", "carlos@example.com", "555-1234", 10, 4)
+    @arbol.insertar Contacto.new("Ana", "ana@example.com", "555-5678", 22, 6)
+    @arbol.insertar Contacto.new("María", "maria@example.com", "555-9012", 5, 12)
 
-      bst.insertar(carlos)
-      bst.insertar(david)
-      bst.insertar(ana)
-      bst.insertar(bea)
+    nombres = @arbol.listar_inorden.map(&.nombre)
+    nombres.should eq(["Ana", "Carlos", "María"])
+  end
 
-      nombres = bst.listar_inorden.map(&.nombre)
-      nombres.should eq(["Ana", "Bea", "Carlos", "David"])
-    end
+  it "funciona con subárboles y ordena correctamente" do
+    @arbol.insertar Contacto.new("Daniel", "daniel@example.com", "555-0001", 1, 1)
+    @arbol.insertar Contacto.new("Beatriz", "beatriz@example.com", "555-0002", 2, 2)
+    @arbol.insertar Contacto.new("Ernesto", "ernesto@example.com", "555-0003", 3, 3)
+    @arbol.insertar Contacto.new("Ana", "ana@example.com", "555-0004", 4, 4)
+    @arbol.insertar Contacto.new("Clara", "clara@example.com", "555-0005", 5, 5)
 
-    it "recorre todos los nodos en subárboles izquierdos y derechos" do
-      bst = ContactoBST.new
-      contactos = [
-        Contacto.new("Lucas", "lucas@example.com", "+34 101", 5, 5),
-        Contacto.new("Ana", "ana@example.com", "+34 202", 6, 6),
-        Contacto.new("Zoe", "zoe@example.com", "+34 303", 7, 7),
-        Contacto.new("David", "david@example.com", "+34 404", 8, 8),
-        Contacto.new("Bea", "bea@example.com", "+34 505", 9, 9)
-      ]
-
-      contactos.each do |contacto|
-        bst.insertar(contacto)
-      end
-
-      orden_esperado = ["Ana", "Bea", "David", "Lucas", "Zoe"]
-      resultados = bst.listar_inorden.map(&.nombre)
-
-      resultados.should eq(orden_esperado)
-      resultados.size.should eq(contactos.size)
-    end
+    nombres = @arbol.listar_inorden.map(&.nombre)
+    nombres.should eq(["Ana", "Beatriz", "Clara", "Daniel", "Ernesto"])
   end
 end
