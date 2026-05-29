@@ -2,6 +2,28 @@ require "spec"
 require "../src/agenda_contactos"
 
 describe AgendaContactos do
+  describe "#eliminar_contacto" do
+    it "elimina un contacto y vuelve a guardar el CSV" do
+      ruta = "contactos_eliminacion_prueba.csv"
+
+      begin
+        agenda = AgendaContactos.new(ruta)
+        agenda.agregar_contacto("Ana", "ana@example.com", "+34 111", 11, 6)
+        agenda.agregar_contacto("Luis", "luis@example.com", "+34 222", 10, 5)
+
+        eliminado = agenda.eliminar_contacto("Ana")
+        eliminado.should_not be_nil
+        eliminado.not_nil!.nombre.should eq("Ana")
+
+        contenido = File.read(ruta)
+        contenido.should contain("Luis,luis@example.com,+34 222,10,5")
+        contenido.should_not contain("Ana,ana@example.com,+34 111,11,6")
+      ensure
+        File.delete(ruta) if File.exists?(ruta)
+      end
+    end
+  end
+
   describe "#guardar_en_csv" do
     it "guarda los contactos en orden inorder y sobrescribe el archivo" do
       agenda = AgendaContactos.new
