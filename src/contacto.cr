@@ -19,6 +19,17 @@ class Contacto
     validar_fecha
   end
 
+  # Construye un contacto a partir de una línea CSV con 5 valores.
+  def self.from_csv_line(linea : String) : Contacto
+    campos = linea.chomp.split(",").map(&.strip)
+    if campos.size != 5
+      raise ArgumentError.new("Línea CSV inválida: se esperaban 5 campos")
+    end
+
+    nombre, email, telefono, dia_str, mes_str = campos
+    Contacto.new(nombre, email, telefono, dia_str.to_i, mes_str.to_i)
+  end
+
   # Obtener los días máximos de un mes
   # Retorna: 31, 30, o 29 según el mes
   private def dias_max_del_mes(mes : Int32) : Int32
