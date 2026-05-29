@@ -147,27 +147,27 @@ A continuación se listan las capturas sugeridas para incluir en la entrega fina
 
 ### Captura 1: menú principal
 
-![Menú principal](screenshots/menu_principal.png)
+![Menú principal](https://github.com/Killercrod/TLP-Crystal/blob/11c782ccbab623334200b37c2399896622134c02/docs/Menu.jpeg)
 
 ### Captura 2: agregar contacto
 
-![Alta de contacto](screenshots/agregar_contacto.png)
+![Alta de contacto](https://github.com/Killercrod/TLP-Crystal/blob/11c782ccbab623334200b37c2399896622134c02/docs/AgregarContacto.jpeg)
 
 ### Captura 3: búsqueda por nombre
 
-![Buscar contacto](screenshots/buscar_contacto.png)
+![Buscar contacto](https://github.com/Killercrod/TLP-Crystal/blob/11c782ccbab623334200b37c2399896622134c02/docs/Busqueda.jpeg)
 
 ### Captura 4: eliminación de contacto
 
-![Eliminar contacto](screenshots/eliminar_contacto.png)
+![Eliminar contacto](https://github.com/Killercrod/TLP-Crystal/blob/11c782ccbab623334200b37c2399896622134c02/docs/EliminarContacto.jpeg)
 
 ### Captura 5: listado de contactos
 
-![Listar contactos](screenshots/listar_contactos.png)
+![Listar contactos](https://github.com/Killercrod/TLP-Crystal/blob/11c782ccbab623334200b37c2399896622134c02/docs/ListadoContactos.jpeg)
 
 ### Captura 6: archivo CSV generado
 
-![CSV generado](screenshots/csv_generado.png)
+![CSV generado](https://github.com/Killercrod/TLP-Crystal/blob/11c782ccbab623334200b37c2399896622134c02/docs/ArchivoCSV.jpeg)
 
 ## 7. Código fuente del programa
 
