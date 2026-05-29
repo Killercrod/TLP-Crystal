@@ -143,7 +143,7 @@ La solución está separada por responsabilidades para facilitar mantenimiento y
 
 ## 6. Capturas de pantalla de ejemplo de ejecución
 
-A continuación se listan las capturas sugeridas para incluir en la entrega final. Si todavía no se han generado, se pueden agregar más adelante con nombres similares.
+A continuación se listan las capturas sugeridas para incluir en la entrega final. 
 
 ### Captura 1: menú principal
 
