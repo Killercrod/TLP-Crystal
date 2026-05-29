@@ -1,6 +1,6 @@
 require "./contacto"
 require "./contacto_bst"
-require "./agenda_contactos" #clase que manejara la logica de negocio
+require "./agenda_contactos"
 
 agenda = AgendaContactos.new
 csv_path = "contactos.csv"
@@ -132,15 +132,12 @@ end
 print "Mes: "
 mes = gets.to_s.chomp.to_i
 
-begin
-  resultados = agenda.buscar_por_mes(mes)
+    contacto = agenda.buscar_contacto(nombre)
 
-  if resultados.empty?
-    puts "No hay contactos en ese mes."
-  else
-    puts "\nCumpleaños encontrados:"
-    resultados.each do |contacto|
-      puts "#{contacto.nombre} - #{contacto.fecha_cumpleanos}"
+    if contacto
+      puts contacto.to_s_detallado
+    else
+      puts "Contacto no encontrado."
     end
   end
 
@@ -153,11 +150,27 @@ puts "\n--- Lista de contactos ---"
 
 contactos = agenda.listar_contactos
 
-if contactos.empty?
-  puts "No hay contactos registrados."
-else
-  contactos.each do |contacto|
-    puts contacto.to_s
+    if contactos.empty?
+      puts "No hay contactos registrados."
+    else
+      contactos.each do |contacto|
+        puts contacto.to_s
+      end
+    end
+  when "6"
+    puts "\n--- Guardar datos ---"
+
+    begin
+      ruta = agenda.guardar_en_csv
+      puts "Contactos guardados en #{ruta}."
+    rescue ex
+      puts "Error al guardar CSV: #{ex.message}"
+    end
+  when "7"
+    puts "\nSaliendo del programa..."
+    break
+  else
+    puts "\nOpción inválida."
   end
 end
 
