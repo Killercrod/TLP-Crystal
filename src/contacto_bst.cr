@@ -146,7 +146,55 @@ class ContactoBST
     resultado
   end
 
-  private def listar_rec(nodo : Nodo?, resultado : Array(Contacto)) : Void
+  # Eliminar un contacto por nombre (case-insensitive).
+  # Retorna true si se eliminó un nodo, false si no se encontró.
+  def eliminar(nombre : String) : Bool
+    nuevo, eliminado = eliminar_rec(@raiz, nombre.downcase)
+    @raiz = nuevo
+    eliminado
+  end
+
+  private def eliminar_rec(nodo : NodoContacto?, nombre_minuscula : String) : Tuple(NodoContacto?, Bool)
+    return {nil, false} if nodo.nil?
+
+    cmp = nombre_minuscula <=> nodo.contacto.nombre.downcase
+
+    if cmp < 0
+      nuevo_izq, eliminado = eliminar_rec(nodo.izquierdo, nombre_minuscula)
+      nodo.izquierdo = nuevo_izq
+      return {nodo, eliminado}
+    elsif cmp > 0
+      nuevo_der, eliminado = eliminar_rec(nodo.derecho, nombre_minuscula)
+      nodo.derecho = nuevo_der
+      return {nodo, eliminado}
+    else
+      # Nodo a eliminar encontrado
+      if nodo.izquierdo.nil? && nodo.derecho.nil?
+        return {nil, true}
+      elsif nodo.izquierdo.nil?
+        return {nodo.derecho, true}
+      elsif nodo.derecho.nil?
+        return {nodo.izquierdo, true}
+      else
+        sucesor = min_node(nodo.derecho)
+        nodo.contacto = sucesor.contacto
+        nuevo_der, _ = eliminar_rec(nodo.derecho, sucesor.contacto.nombre.downcase)
+        nodo.derecho = nuevo_der
+        return {nodo, true}
+      end
+    end
+  end
+
+  private def min_node(nodo : NodoContacto) : NodoContacto
+    actual = nodo
+    while !actual.izquierdo.nil?
+      actual = actual.izquierdo
+    end
+
+    actual
+  end
+
+  private def listar_rec(nodo : NodoContacto?, resultado : Array(Contacto)) : Void
     return if nodo.nil?
     listar_rec(nodo.izquierda, resultado)
     resultado << nodo.contacto

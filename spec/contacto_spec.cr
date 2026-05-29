@@ -1,5 +1,5 @@
 require "spec"
-require "./src/contacto"
+require "../src/contacto"
 
 describe Contacto do
   describe "#initialize" do
