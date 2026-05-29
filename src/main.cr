@@ -3,6 +3,14 @@ require "./contacto_bst"
 require "./agenda_contactos" #clase que manejara la logica de negocio
 
 agenda = AgendaContactos.new
+csv_path = "contactos.csv"
+if File.exists?(csv_path)
+  begin
+    agenda.cargar_desde_csv(csv_path)
+  rescue ex
+    puts "Error al cargar CSV: #{ex.message}"
+  end
+end
 
 loop do
 puts "\n===== AGENDA DE CONTACTOS ====="
