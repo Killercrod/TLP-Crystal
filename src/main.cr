@@ -56,7 +56,22 @@ loop do
       puts "Contacto no encontrado."
     end
   when "3"
-    puts "\nEliminar contacto aún no implementado."
+    puts "\n--- Eliminar contacto ---"
+
+    print "Nombre a eliminar: "
+    nombre = gets.to_s.chomp
+
+    begin
+      contacto = agenda.eliminar_contacto(nombre)
+
+      if contacto
+        puts "Contacto eliminado correctamente."
+      else
+        puts "Contacto no encontrado."
+      end
+    rescue ex
+      puts "Error: #{ex.message}"
+    end
   when "4"
     puts "\n--- Buscar por mes ---"
 

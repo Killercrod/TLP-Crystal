@@ -1,5 +1,5 @@
 # Árbol binario de búsqueda para `Contacto`
-# Implementa inserción y búsqueda eficiente por nombre.
+# Implementa inserción, búsqueda y eliminación por nombre.
 
 require "./nodo"
 
@@ -81,6 +81,14 @@ class ContactoBST
     buscar_rec(@raiz, nombre.downcase)
   end
 
+  def eliminar_por_nombre(nombre : String) : Contacto?
+    contacto = buscar_por_nombre(nombre)
+    return nil unless contacto
+
+    @raiz = eliminar_rec(@raiz, nombre.downcase)
+    contacto
+  end
+
   private def buscar_rec(nodo : Nodo?, nombre_minuscula : String) : Contacto?
     return nil if nodo.nil?
 
@@ -97,6 +105,37 @@ class ContactoBST
       # Nombre buscado es mayor -> buscar en subárbol derecho
       buscar_rec(nodo.derecha, nombre_minuscula)
     end
+  end
+
+  private def eliminar_rec(nodo : Nodo?, nombre_minuscula : String) : Nodo?
+    return nil if nodo.nil?
+
+    cmp = nombre_minuscula <=> nodo.contacto.nombre.downcase
+
+    if cmp < 0
+      nodo.izquierda = eliminar_rec(nodo.izquierda, nombre_minuscula)
+    elsif cmp > 0
+      nodo.derecha = eliminar_rec(nodo.derecha, nombre_minuscula)
+    else
+      return nodo.derecha if nodo.izquierda.nil?
+      return nodo.izquierda if nodo.derecha.nil?
+
+      sucesor = minimo_nodo(nodo.derecha.not_nil!)
+      nodo.contacto = sucesor.contacto
+      nodo.derecha = eliminar_rec(nodo.derecha, sucesor.contacto.nombre.downcase)
+    end
+
+    nodo
+  end
+
+  private def minimo_nodo(nodo : Nodo) : Nodo
+    actual = nodo
+
+    while siguiente = actual.izquierda
+      actual = siguiente
+    end
+
+    actual
   end
 
   # Listado in-order (orden alfabético por nombre).

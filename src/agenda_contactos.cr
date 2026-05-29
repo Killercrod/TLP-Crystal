@@ -43,6 +43,12 @@ class AgendaContactos
     @arbol.buscar_por_nombre(nombre)
   end
 
+  def eliminar_contacto(nombre : String) : Contacto?
+    contacto = @arbol.eliminar_por_nombre(nombre)
+    guardar_en_csv if contacto
+    contacto
+  end
+
   def buscar_por_mes(mes : Int32) : Array(Contacto)
     if mes < 1 || mes > 12
       raise ArgumentError.new("El mes debe estar entre 1 y 12")
