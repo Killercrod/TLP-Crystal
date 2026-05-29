@@ -1,3 +1,4 @@
+require "csv"
 require "./contacto"
 require "./contacto_bst"
 
@@ -34,7 +35,7 @@ class AgendaContactos
     raise ArgumentError.new("Contacto inválido") unless contacto.valido?
 
     @arbol.insertar(contacto)
-    guardar_contacto_csv(contacto)
+    guardar_en_csv
     contacto
   end
 
@@ -54,55 +55,43 @@ class AgendaContactos
     @arbol.listar_inorden
   end
 
+  def guardar_en_csv(ruta : String = @archivo_csv) : String
+    contenido = CSV.build do |csv|
+      csv.row "Nombre", "Email", "Telefono", "Dia", "Mes"
+
+      listar_contactos.each do |contacto|
+        csv.row contacto.nombre, contacto.email, contacto.telefono, contacto.dia, contacto.mes
+      end
+    end
+
+    File.write(ruta, contenido)
+    @archivo_csv = ruta
+    ruta
+  end
+
   private def cargar_contactos : Void
     return unless File.exists?(@archivo_csv)
 
-    File.open(@archivo_csv, "r") do |file|
-      first_line = true
-      file.each_line do |line|
-        next if first_line
-        first_line = false
+    contenido = File.read(@archivo_csv)
+    csv = CSV.new(contenido, headers: true)
 
-        fields = line.chomp.split(",")
-        next if fields.size < 5
+    while csv.next
+      nombre = csv["Nombre"]?
+      email = csv["Email"]?
+      telefono = csv["Telefono"]?
+      dia_texto = csv["Dia"]?
+      mes_texto = csv["Mes"]?
 
-        nombre = fields[0].to_s
-        email = fields[1].to_s
-        telefono = fields[2].to_s
-        dia = fields[3].to_i
-        mes = fields[4].to_i
+      next unless nombre && email && telefono && dia_texto && mes_texto
 
-        begin
-          contacto = Contacto.new(nombre, email, telefono, dia, mes)
-          @arbol.insertar(contacto)
-        rescue ex
-          # Ignorar filas inválidas
-        end
+      begin
+        contacto = Contacto.new(nombre, email, telefono, dia_texto.to_i, mes_texto.to_i)
+        @arbol.insertar(contacto)
+      rescue
+        # Ignorar filas inválidas
       end
     end
-  rescue ex
+  rescue
     # Ignorar errores al leer el archivo CSV
-  end
-
-  private def guardar_contacto_csv(contacto : Contacto) : Void
-    new_file = !File.exists?(@archivo_csv)
-
-    File.open(@archivo_csv, "a+") do |file|
-      if new_file
-        file.puts "Nombre,Email,Telefono,Dia,Mes"
-      end
-
-      file.puts escapar_csv(contacto.nombre, contacto.email, contacto.telefono, contacto.dia, contacto.mes)
-    end
-  end
-
-  private def escapar_csv(nombre : String, email : String, telefono : String, dia : Int32, mes : Int32) : String
-    [nombre, email, telefono, dia.to_s, mes.to_s].map do |campo|
-      if campo.includes?(",") || campo.includes?("\"") || campo.includes?("\n")
-        "\"#{campo.gsub("\"", "\"\"")}\""
-      else
-        campo
-      end
-    end.join(",")
   end
 end

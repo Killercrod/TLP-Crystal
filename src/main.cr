@@ -11,7 +11,8 @@ loop do
   puts "3. Eliminar contacto"
   puts "4. Buscar por mes"
   puts "5. Listar contactos"
-  puts "6. Salir"
+  puts "6. Guardar datos"
+  puts "7. Salir"
   print "Seleccione una opción: "
 
   opcion = gets.to_s.chomp
@@ -19,6 +20,7 @@ loop do
   case opcion
   when "1"
     puts "\n--- Agregar contacto ---"
+
     print "Nombre: "
     nombre = gets.to_s.chomp
 
@@ -40,9 +42,9 @@ loop do
     rescue ex
       puts "Error: #{ex.message}"
     end
-
   when "2"
     puts "\n--- Buscar contacto ---"
+
     print "Nombre a buscar: "
     nombre = gets.to_s.chomp
 
@@ -53,12 +55,11 @@ loop do
     else
       puts "Contacto no encontrado."
     end
-
   when "3"
     puts "\nEliminar contacto aún no implementado."
-
   when "4"
     puts "\n--- Buscar por mes ---"
+
     print "Mes: "
     mes = gets.to_s.chomp.to_i
 
@@ -76,9 +77,9 @@ loop do
     rescue ex
       puts "Error: #{ex.message}"
     end
-
   when "5"
     puts "\n--- Lista de contactos ---"
+
     contactos = agenda.listar_contactos
 
     if contactos.empty?
@@ -88,11 +89,18 @@ loop do
         puts contacto.to_s
       end
     end
-
   when "6"
+    puts "\n--- Guardar datos ---"
+
+    begin
+      ruta = agenda.guardar_en_csv
+      puts "Contactos guardados en #{ruta}."
+    rescue ex
+      puts "Error al guardar CSV: #{ex.message}"
+    end
+  when "7"
     puts "\nSaliendo del programa..."
     break
-
   else
     puts "\nOpción inválida."
   end
